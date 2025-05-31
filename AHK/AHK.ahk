@@ -1,57 +1,69 @@
 ; ==============================================
-; 键盘映射工具 v1.7.0
+; 键盘映射工具 v2.0.0
 ; 功能：Win/CapsLock 切换映射模式
-; 作者：县道377
-; 更新：2025-05-29
 ; ==============================================
-
-#Requires AutoHotkey v2.0
+#Requires AutoHotkey v2.0.0
 #SingleInstance Force
-A_MenuMaskKey := "vkE8"  ; 防止菜单键干扰
-SetCapsLockState "AlwaysOff"   ; 初始强制关闭
-global Toggle := "AlwaysOff"
+Persistent
+#Warn All
+SetWorkingDir A_ScriptDir
 
+; ===================== 性能优化配置 =====================
+ProcessSetPriority "High"  ; 提高脚本优先级
+ListLines 0                ; 禁用行日志提升性能
+SendMode "Input"           ; 使用最快的SendInput模式
+SetKeyDelay -1, -1         ; 消除按键延迟
+SetWinDelay -1             ; 优化窗口操作
+SetControlDelay -1         ; 优化控件操作
+A_MenuMaskKey := "vkE8"    ; 防止菜单键干扰
+SetCapsLockState "AlwaysOff"
+global Toggle := false     ; 使用布尔值更高效
 ; ===================== 系统初始化 =====================
 ; 自启动设置
 try {
-    if !FileExist(A_Startup "\AHK_v1.7.0.lnk")
-        FileCreateShortcut A_ScriptFullPath, A_Startup "\AHK_v1.7.0.lnk"
+    if !FileExist(A_Startup "\AHK_v2.0.0.lnk")
+        FileCreateShortcut A_ScriptFullPath, A_Startup "\AHK_v2.0.0.lnk"
 } catch Error as e {
     MsgBox "创建开机启动快捷方式失败: " e.Message
 }
 
-; ================== CapsLock短按逻辑 ==================
-~CapsLock:: {
-    key_start := A_TickCount
-    KeyWait "CapsLock"
-    if (A_TickCount - key_start < 200) {
-        SendInput "{Blind}{Esc}"  ; 更可靠的发送方式
-    }
-}
-
 ; ================= CapsLock状态切换 =================
 ToggleCapsLock() {
+    static lastToggleTime := 0
     global Toggle
-    if (Toggle == "AlwaysOn") {
+
+    if (Toggle) {
         SetCapsLockState "AlwaysOff"
-        Toggle := "AlwaysOff"
-    } else if (Toggle == "AlwaysOff") {
+        Toggle := false
+    } else {
         SetCapsLockState "AlwaysOn"
-        Toggle := "AlwaysOn"
+        Toggle := true
     }
+    lastToggleTime := A_TickCount
 }
-#`:: ToggleCapsLock()         ; Win + `
-CapsLock & `:: ToggleCapsLock() ; CapsLock + `
 
-
+#` Up:: ToggleCapsLock()         ; Win + `
+CapsLock & ` up:: ToggleCapsLock() ; CapsLock + `
 
 ; ===================== 常驻映射 =====================
-; 多媒体键映射
-*Browser_Back::F1
-*Browser_Refresh::F2
-*PrintScreen::F4
+*Browser_Back:: SendInput "{F1}"
+*Browser_Refresh:: SendInput "{F2}"
+*PrintScreen:: SendInput "{F4}"
+; 符号键重映射
+*`:: {
+    Send "{Escape}"
+    return
+}
 
-; Win组合键映射
+*Esc:: {
+    Send "``"  ; 使用转义字符
+    return
+}
+
+; 物理CapsLock映射为Win键
+*CapsLock::LWin
+
+; Win组合键映射 (使用直接语法)
 #1::F1
 #2::F2
 #3::F3
@@ -73,7 +85,7 @@ CapsLock & `:: ToggleCapsLock() ; CapsLock + `
 #Backspace::Delete
 
 ; ================= CapsLock组合键映射 =================
-#HotIf GetKeyState("CapsLock", "P")
+#HotIf GetKeyState("CapsLock", "P")  ; 使用物理按下状态
 e::#e
 d::#d
 r::#r
