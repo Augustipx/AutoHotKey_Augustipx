@@ -21,8 +21,8 @@ global Toggle := false     ; 使用布尔值更高效
 ; ===================== 系统初始化 =====================
 ; 自启动设置
 try {
-    if !FileExist(A_Startup "\AHK_v2.0.0.lnk")
-        FileCreateShortcut A_ScriptFullPath, A_Startup "\AHK_v2.0.0.lnk"
+    if !FileExist(A_Startup "\AHK.lnk")
+        FileCreateShortcut A_ScriptFullPath, A_Startup "\AHK.lnk"
 } catch Error as e {
     MsgBox "创建开机启动快捷方式失败: " e.Message
 }
