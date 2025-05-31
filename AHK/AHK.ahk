@@ -2,7 +2,7 @@
 ; 键盘映射工具 v2.0.0
 ; 功能：Win/CapsLock 切换映射模式
 ; ==============================================
-#Requires AutoHotkey v2.0.0
+#Requires AutoHotkey v2.0.2
 #SingleInstance Force
 Persistent
 #Warn All
@@ -46,9 +46,9 @@ ToggleCapsLock() {
 CapsLock & ` up:: ToggleCapsLock() ; CapsLock + `
 
 ; ===================== 常驻映射 =====================
-*Browser_Back:: SendInput "{F1}"
-*Browser_Refresh:: SendInput "{F2}"
-*PrintScreen:: SendInput "{F4}"
+*Browser_Back:: F1
+*Browser_Refresh:: F2
+*PrintScreen:: F4
 
 ; 符号键重映射
 *`::Esc
