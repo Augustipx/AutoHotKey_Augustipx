@@ -49,18 +49,10 @@ CapsLock & ` up:: ToggleCapsLock() ; CapsLock + `
 *Browser_Back:: SendInput "{F1}"
 *Browser_Refresh:: SendInput "{F2}"
 *PrintScreen:: SendInput "{F4}"
+
 ; 符号键重映射
-*`:: {
-    Send "{Escape}"
-    return
-}
-
-*Esc:: {
-    Send "``"  ; 使用转义字符
-    return
-}
-
-; 物理CapsLock映射为Win键
+*`::Esc
+*Esc::`
 *CapsLock::LWin
 
 ; Win组合键映射 (使用直接语法)
