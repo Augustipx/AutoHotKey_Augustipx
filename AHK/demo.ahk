@@ -2,7 +2,6 @@
 ; 键盘映射工具 v2.0.0
 ; 功能：Win/CapsLock 切换映射模式
 ; ==============================================
-
 #Requires AutoHotkey v2.0.2
 #SingleInstance Force
 Persistent
@@ -17,26 +16,18 @@ SetKeyDelay -1, -1         ; 消除按键延迟
 SetWinDelay -1             ; 优化窗口操作
 SetControlDelay -1         ; 优化控件操作
 A_MenuMaskKey := "vkE8"    ; 防止菜单键干扰
-
-; ===================== 系统初始化 =====================
-try {
-    if !FileExist(A_Startup "\AHK.lnk")
-        FileCreateShortcut A_ScriptFullPath, A_Startup "\AHK.lnk"
-} catch Error as e {
-    MsgBox "创建开机启动快捷方式失败: " e.Message
-}
 SetCapsLockState "AlwaysOff"
-
-; ===================== 常驻映射 =====================
-*Browser_Back::F1
-*Browser_Refresh::F2
-*PrintScreen::F4
-*`::Esc
-*Esc::`
-*CapsLock::LWin
+global Toggle := false     ; 使用布尔值更高效
+; ===================== 系统初始化 =====================
+; 自启动设置
+; try {
+;     if !FileExist(A_Startup "\AHK.lnk")
+;         FileCreateShortcut A_ScriptFullPath, A_Startup "\AHK.lnk"
+; } catch Error as e {
+;     MsgBox "创建开机启动快捷方式失败: " e.Message
+; }
 
 ; ================= CapsLock状态切换 =================
-global Toggle := false
 ToggleCapsLock() {
     static lastToggleTime := 0
     global Toggle
@@ -50,11 +41,23 @@ ToggleCapsLock() {
     }
     lastToggleTime := A_TickCount
 }
-#` Up:: ToggleCapsLock()
-CapsLock & ` up:: ToggleCapsLock()
+
+#` Up:: ToggleCapsLock()         ; Win + `
+CapsLock & ` up:: ToggleCapsLock() ; CapsLock + `
+
+; ===================== 常驻映射 =====================
+*Browser_Back::F1
+*Browser_Refresh::F2
+*PrintScreen::F4
+
+
+; 符号键重映射
+*`::Esc
+*Esc::`
+*CapsLock::LWin
 
 ; ================= CapsLock组合键映射 =================
-#HotIf GetKeyState("CapsLock", "P")
+#HotIf GetKeyState("CapsLock", "P")  ; 使用物理按下状态
 e::#e
 d::#d
 r::#r
@@ -84,7 +87,7 @@ Down::PgDn
 Enter::^+Esc
 #HotIf
 
-; ================= Win组合键映射 =================
+; Win组合键映射 (使用直接语法)
 #1::F1
 #2::F2
 #3::F3
