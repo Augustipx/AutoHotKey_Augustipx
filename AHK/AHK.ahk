@@ -1,5 +1,5 @@
 ; ==============================================
-; 键盘映射工具 v2.0.0
+; 键盘映射工具 v2.0.1
 ; 功能：Win/CapsLock 切换映射模式
 ; ==============================================
 
@@ -31,9 +31,7 @@ SetCapsLockState "AlwaysOff"
 *Browser_Back::F1
 *Browser_Refresh::F2
 *PrintScreen::F4
-*`::Esc
-*Esc::`
-*CapsLock::LWin
+*CapsLock::Esc
 
 ; ================= CapsLock状态切换 =================
 global Toggle := false
@@ -62,7 +60,7 @@ x::#x
 v::#v
 .::#.
 i::#i
-+i::Insert
+`::Insert
 1::F1
 2::F2
 3::F3
@@ -102,5 +100,5 @@ Enter::^+Esc
 #Up::PgUp
 #Down::PgDn
 #Enter::^+Esc
-#+i::Insert
+#`::Insert
 #Backspace::Delete
