@@ -60,7 +60,7 @@ x::#x
 v::#v
 .::#.
 i::#i
-`::Insert
++i::Insert
 1::F1
 2::F2
 3::F3
@@ -100,5 +100,5 @@ Enter::^+Esc
 #Up::PgUp
 #Down::PgDn
 #Enter::^+Esc
-#`::Insert
+#+i::Insert
 #Backspace::Delete
