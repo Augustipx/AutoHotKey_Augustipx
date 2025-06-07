@@ -1,5 +1,5 @@
 ; ==============================================
-; 键盘映射工具 v2.0.1
+; 键盘映射工具 v2.0.2
 ; 功能：Win/CapsLock 切换映射模式
 ; ==============================================
 
@@ -48,8 +48,8 @@ ToggleCapsLock() {
     }
     lastToggleTime := A_TickCount
 }
-#` Up:: ToggleCapsLock()
-CapsLock & ` up:: ToggleCapsLock()
+#+c Up:: ToggleCapsLock()
+CapsLock & c Up:: ToggleCapsLock()
 
 ; ================= CapsLock组合键映射 =================
 #HotIf GetKeyState("CapsLock", "P")
@@ -60,7 +60,7 @@ x::#x
 v::#v
 .::#.
 i::#i
-+i::Insert
+`::Insert
 1::F1
 2::F2
 3::F3
@@ -100,5 +100,5 @@ Enter::^+Esc
 #Up::PgUp
 #Down::PgDn
 #Enter::^+Esc
-#+i::Insert
+#`::Insert
 #Backspace::Delete
