@@ -1,5 +1,5 @@
 ; ==============================================
-; 键盘映射工具 v2.0.2
+; 键盘映射工具 v2.2.2
 ; 功能：Win/CapsLock 切换映射模式
 ; ==============================================
 
@@ -31,7 +31,6 @@ SetCapsLockState "AlwaysOff"
 *Browser_Back::F1
 *Browser_Refresh::F2
 *PrintScreen::F4
-*CapsLock::Esc
 
 ; ================= CapsLock状态切换 =================
 global Toggle := false
@@ -48,41 +47,52 @@ ToggleCapsLock() {
     }
     lastToggleTime := A_TickCount
 }
-#c Up:: ToggleCapsLock()
+
+; ===================== CapsLock 处理 =====================
+IsLongPress(key, longPressTime := 200) {
+    startTime := A_TickCount
+    KeyWait key
+    pressTime := A_TickCount - startTime
+    return pressTime >= longPressTime
+}
+*CapsLock:: {
+    if IsLongPress("CapsLock")
+        return
+    else
+        Send "{Esc}"
+}
+
+; ===================== CapsLock键映射处理 =====================
+CapsLock & e::#e
+CapsLock & d::#d
+CapsLock & r::#r
+CapsLock & x::#x
+CapsLock & v::#v
+CapsLock & .::#.
+CapsLock & i::#i
+CapsLock & `::Insert
+CapsLock & 1::F1
+CapsLock & 2::F2
+CapsLock & 3::F3
+CapsLock & 4::F4
+CapsLock & 5::F5
+CapsLock & 6::F6
+CapsLock & 7::F7
+CapsLock & 8::F8
+CapsLock & 9::F9
+CapsLock & 0::F10
+CapsLock & -::F11
+CapsLock & =::F12
+CapsLock & Tab::#Tab
+CapsLock & BackSpace::Delete
+CapsLock & Left::Home
+CapsLock & Right::End
+CapsLock & Up::PgUp
+CapsLock & Down::PgDn
+CapsLock & Enter::^+Esc
 CapsLock & c Up:: ToggleCapsLock()
 
-; ================= CapsLock组合键映射 =================
-#HotIf GetKeyState("CapsLock", "P")
-e::#e
-d::#d
-r::#r
-x::#x
-v::#v
-.::#.
-i::#i
-`::Insert
-1::F1
-2::F2
-3::F3
-4::F4
-5::F5
-6::F6
-7::F7
-8::F8
-9::F9
-0::F10
--::F11
-=::F12
-Tab::#Tab
-BackSpace::Delete
-Left::Home
-Right::End
-Up::PgUp
-Down::PgDn
-Enter::^+Esc
-#HotIf
-
-; ================= Win组合键映射 =================
+; ===================== Win键映射处理 =====================
 #1::F1
 #2::F2
 #3::F3
@@ -102,3 +112,7 @@ Enter::^+Esc
 #Enter::^+Esc
 #`::Insert
 #Backspace::Delete
+~LWin Up:: {
+    if (A_PriorKey = "c")
+        ToggleCapsLock()
+}
