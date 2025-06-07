@@ -48,7 +48,7 @@ ToggleCapsLock() {
     }
     lastToggleTime := A_TickCount
 }
-#+c Up:: ToggleCapsLock()
+#c Up:: ToggleCapsLock()
 CapsLock & c Up:: ToggleCapsLock()
 
 ; ================= CapsLock组合键映射 =================
