@@ -1,9 +1,10 @@
 ; ==============================================
-; 键盘映射工具 v2.3.2
+; 键盘映射工具 v3.0.0
 ; 功能：Win/CapsLock 切换映射模式
+; Win键适配主要是适配Chrome键盘(无CapsLk键)
 ; ==============================================
 
-#Requires AutoHotkey v2.0.2
+#Requires AutoHotkey v2.0
 #SingleInstance Force
 Persistent
 #Warn All
@@ -16,7 +17,7 @@ SendMode "Input"           ; 使用最快的SendInput模式
 SetKeyDelay -1, -1         ; 消除按键延迟
 SetWinDelay -1             ; 优化窗口操作
 SetControlDelay -1         ; 优化控件操作
-A_MenuMaskKey := "vkE8"    ; 防止菜单键干扰
+A_MenuMaskKey := "vkE8"    ; 防止菜单键
 
 ; ===================== 系统初始化 =====================
 try {
@@ -31,47 +32,27 @@ SetCapsLockState "AlwaysOff"
 *Browser_Back::F1
 *Browser_Refresh::F2
 *PrintScreen::F4
-*RAlt::LWin
-
-; ================= CapsLock状态切换 =================
-global Toggle := false
-ToggleCapsLock() {
-    static lastToggleTime := 0
-    global Toggle
-
-    if (Toggle) {
-        SetCapsLockState "AlwaysOff"
-        Toggle := false
-    } else {
-        SetCapsLockState "AlwaysOn"
-        Toggle := true
+; 如果没有其他按键按下,发送Win键
+*RAlt:: {
+    SendInput "{Blind}{RAlt Down}"
+    if KeyWait("RAlt") {
+        if !A_PriorKey || A_PriorKey = "RAlt" {
+            SendInput "{Blind}{RAlt Up}"
+            SendInput "{Blind}{LWin}"
+        }
     }
-    lastToggleTime := A_TickCount
-}
-
-IsLongPress(key, longPressTime := 200) {
-    startTime := A_TickCount
-    KeyWait key
-    pressTime := A_TickCount - startTime
-    return pressTime >= longPressTime
-}
-
-~LWin:: {
-    Send "{Blind}{vkE8}"
-    if IsLongPress("LWin")
-        return
-    else
-        Send "{Esc}"
-}
-
-*CapsLock:: {
-    if IsLongPress("CapsLock")
-        return
-    else
-        Send "{Esc}"
+    SendInput "{Blind}{RAlt Up}"
 }
 
 ; ===================== CapsLock键映射处理 =====================
+; 如果没有其他按键按下,发送Esc键
+*CapsLock:: {
+    if KeyWait("CapsLock") {
+        if !A_PriorKey || A_PriorKey = "CapsLock" {
+            SendInput "{Blind}{Esc}"
+        }
+    }
+}
 CapsLock & e::#e
 CapsLock & d::#d
 CapsLock & r::#r
@@ -99,9 +80,18 @@ CapsLock & Right::End
 CapsLock & Up::PgUp
 CapsLock & Down::PgDn
 CapsLock & Enter::^+Esc
-CapsLock & c Up:: ToggleCapsLock()
+CapsLock & c Up:: CapsState.toggle()
 
 ; ===================== Win键映射处理 =====================
+; 如果没有其他按键按下,发送Esc键
+~LWin:: SendInput "{Blind}{vkE8}"
+*LWin Up:: {
+    if KeyWait("LWin") {
+        if !A_PriorKey || A_PriorKey = "LWin" {
+            SendInput "{Blind}{Esc}"
+        }
+    }
+}
 #1::F1
 #2::F2
 #3::F3
@@ -121,4 +111,17 @@ CapsLock & c Up:: ToggleCapsLock()
 #Enter::^+Esc
 #`::Insert
 #Backspace::Delete
-LWin & c Up:: ToggleCapsLock()
+LWin & c Up:: CapsState.toggle()
+
+; ================= CapsLock状态切换 =================
+class CapsState {
+    static state := false
+    static toggle() {
+        this.state := !this.state
+        SetCapsLockState this.state ? "AlwaysOn" : "AlwaysOff"
+        return this.state
+    }
+    static get() {
+        return this.state
+    }
+}
