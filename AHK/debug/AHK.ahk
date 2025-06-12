@@ -1,5 +1,5 @@
 ; ==============================================
-; 键盘映射工具 v2.2.2
+; 键盘映射工具 v2.3.2
 ; 功能：Win/CapsLock 切换映射模式
 ; ==============================================
 
@@ -9,7 +9,7 @@ Persistent
 #Warn All
 SetWorkingDir A_ScriptDir
 
-; ===================== 性能优化配置 =====================
+; ; ===================== 性能优化配置 =====================
 ProcessSetPriority "High"  ; 提高脚本优先级
 ListLines 0                ; 禁用行日志提升性能
 SendMode "Input"           ; 使用最快的SendInput模式
@@ -31,6 +31,7 @@ SetCapsLockState "AlwaysOff"
 *Browser_Back::F1
 *Browser_Refresh::F2
 *PrintScreen::F4
+*RAlt::LWin
 
 ; ================= CapsLock状态切换 =================
 global Toggle := false
@@ -48,13 +49,21 @@ ToggleCapsLock() {
     lastToggleTime := A_TickCount
 }
 
-; ===================== CapsLock 处理 =====================
 IsLongPress(key, longPressTime := 200) {
     startTime := A_TickCount
     KeyWait key
     pressTime := A_TickCount - startTime
     return pressTime >= longPressTime
 }
+
+~LWin:: {
+    Send "{Blind}{vkE8}"
+    if IsLongPress("LWin")
+        return
+    else
+        Send "{Esc}"
+}
+
 *CapsLock:: {
     if IsLongPress("CapsLock")
         return
@@ -112,7 +121,4 @@ CapsLock & c Up:: ToggleCapsLock()
 #Enter::^+Esc
 #`::Insert
 #Backspace::Delete
-~LWin Up:: {
-    if (A_PriorKey = "c")
-        ToggleCapsLock()
-}
+LWin & c Up:: ToggleCapsLock()
