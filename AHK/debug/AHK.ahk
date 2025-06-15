@@ -37,11 +37,8 @@ ValueName := "Scancode Map"
 correctMap :=
     "00000000" .
     "00000000" .
-    "06000000" .
-    "1D003A00" . ;CapsLock ->LCtrl
-    "1D005BE0" . ;LWin -> LCtrl
-    "3A003800" . ;LAlt -> CapsLock
-    "38001D00" . ;LCtrl -> LAlt
+    "03000000" .
+    "3A005BE0" . ;LWin -> CapsLock
     "5BE01DE0" . ;RCtrl -> LWin
     "00000000"
 
@@ -79,7 +76,7 @@ CapsLock & 0::F10
 CapsLock & -::F11
 CapsLock & =::F12
 CapsLock & Up::PgUp
-CapsLock & Tab::AltTab
+CapsLock & Tab::#Tab
 CapsLock & `::Insert
 CapsLock & Left::Home
 CapsLock & Right::End
