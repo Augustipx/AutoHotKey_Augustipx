@@ -29,10 +29,9 @@ try {
 } catch Error as e {
     MsgBox "创建开机启动快捷方式失败: " e.Message
 }
-;关闭其他AHK脚本
 DetectHiddenWindows true
 for process in ComObject("WbemScripting.SWbemLocator").ConnectServer().ExecQuery("Select * from Win32_Process where Name like 'AutoHotkey%'") {
-    if (process.ProcessId != ProcessExist()) {  ; 使用 ProcessExist() 替代 ProcessGetId
+    if (process.ProcessId != ProcessExist()) { 
         try {
             ProcessClose process.ProcessId
         }
@@ -40,28 +39,12 @@ for process in ComObject("WbemScripting.SWbemLocator").ConnectServer().ExecQuery
 }
 DetectHiddenWindows false
 
-; ===================== 修改注册表映射 =============================
-RegKey := "HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout"
-ValueName := "Scancode Map"
-correctMap :=
-    "00000000" .
-    "00000000" .
-    "03000000" .
-    "3A005BE0" . ;LWin -> CapsLock
-    "5BE01DE0" . ;RCtrl -> LWin
-    "00000000"
-if (RegRead(RegKey, ValueName, "REG_BINARY") != correctMap) {
-    RegWrite(correctMap, "REG_BINARY", RegKey, ValueName)
-}
-;恢复注册表
-; RegDelete("HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout", "Scancode Map")
-; MsgBox("已删除所有键位映射。`n请重启电脑生效。", "注册表已恢复", "Iconi")
-
 ; ===================== 常驻映射 ====================================
 *Browser_Back::F1
 *Browser_Refresh::F2
 *PrintScreen::F4
 *RAlt::RCtrl
+*RCtrl::RAlt
 *`::`
 SetCapsLockState "AlwaysOff"
 
