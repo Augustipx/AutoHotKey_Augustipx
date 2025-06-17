@@ -61,36 +61,6 @@ CapsLock & BackSpace::Delete
 CapsLock & w up:: SendEvent "{LWin}"
 CapsLock & c up:: CapsState.toggle()
 
-; ===================== Win键映射 ===================================
-#1::F1
-#2::F2
-#3::F3
-#4::F4
-#5::F5
-#6::F6
-#7::F7
-#8::F8
-#9::F9
-#0::F10
-#-::F11
-#=::F12
-#>!=::#=
-#>!-::#-
-#Up::PgUp
-#`::Insert
-#Left::Home
-#Right::End
-#Down::PgDn
-#Enter::^+Esc
-#BackSpace::Delete
-#c up:: CapsState.toggle()
-#w up:: SendEvent "{LWin}"
-~LWin:: {
-    Send "{Blind}{vkE8}"
-    if !IsLongPress("LWin")
-        SendEvent "{Blind}{Esc}"
-}
-
 ; ===================== 亮度声音控制 ===================================
 >!-:: SendEvent("{Volume_Down}")
 >!=:: SendEvent("{Volume_Up}")

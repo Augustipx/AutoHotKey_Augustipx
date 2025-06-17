@@ -1,5 +1,5 @@
 ; ==============================================================
-; 键盘映射工具 v3.9.7
+; 键盘映射工具 v3.9.9
 ; 功能：Win/CapsLock 切换映射模式
 ; ==============================================================
 #Requires AutoHotkey v2.0
@@ -58,7 +58,8 @@ CapsLock & Right::End
 CapsLock & Down::PgDn
 CapsLock & Enter::^+Esc
 CapsLock & BackSpace::Delete
-CapsLock & c::CapsLock
+CapsLock & w up:: SendEvent "{LWin}"
+CapsLock & c up:: CapsState.toggle()
 
 ; ===================== Win键映射 ===================================
 #1::F1
@@ -73,16 +74,17 @@ CapsLock & c::CapsLock
 #0::F10
 #-::F11
 #=::F12
-#`::Insert
+#>!=::#=
+#>!-::#-
 #Up::PgUp
+#`::Insert
 #Left::Home
 #Right::End
 #Down::PgDn
 #Enter::^+Esc
 #BackSpace::Delete
-#c::CapsLock
-#>!=::#=
-#>!-::#-
+#c up:: CapsState.toggle()
+#w up:: SendEvent "{LWin}"
 ~LWin:: {
     Send "{Blind}{vkE8}"
     if !IsLongPress("LWin")
@@ -94,10 +96,18 @@ CapsLock & c::CapsLock
 >!=:: SendEvent("{Volume_Up}")
 >!0:: SendEvent("{Volume_Mute}")
 
-; ===================== win键控制 ===================================
+; ===================== 控制方法 ===================================
 IsLongPress(key, longPressTime := 200) {
     startTime := A_TickCount
     KeyWait key
     pressTime := A_TickCount - startTime
     return pressTime >= longPressTime
+}
+
+class CapsState {
+    static state := false
+    static toggle() {
+        this.state := !this.state
+        SetCapsLockState (this.state ? "AlwaysOn" : "AlwaysOff")
+    }
 }
