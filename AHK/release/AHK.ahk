@@ -3,7 +3,7 @@
 ; 功能：Win/CapsLock 切换映射模式
 ; ==============================================================
 #Requires AutoHotkey v2.0
-#InputLevel 1  
+#InputLevel 1
 #SingleInstance Force
 InstallKeybdHook
 Persistent
@@ -29,12 +29,11 @@ if !FileExist(startupLink)
 *Browser_Back::F1
 *Browser_Refresh::F2
 *PrintScreen::F4
-*`:: SendEvent "{Blind}{Esc}"
 SetCapsLockState "AlwaysOff"
 
 ; ===================== CapsLock键映射处理 ===========================
 CapsLock:: SendEvent "{Esc}"
-CapsLock & `::`
+CapsLock & `::Insert
 CapsLock & e::#e
 CapsLock & d::#d
 CapsLock & r::#r
@@ -53,7 +52,6 @@ CapsLock & 0::F10
 CapsLock & -::F11
 CapsLock & =::F12
 CapsLock & Up::PgUp
-CapsLock & \::Insert
 CapsLock & Tab::#Tab
 CapsLock & Left::Home
 CapsLock & Right::End
@@ -62,8 +60,7 @@ CapsLock & Enter::^+Esc
 CapsLock & BackSpace::Delete
 CapsLock & c::CapsLock
 
-; 在脚本的任意位置（建议放在热键区）添加：
-#`::`
+; ===================== Win键映射 ===================================
 #1::F1
 #2::F2
 #3::F3
@@ -76,7 +73,7 @@ CapsLock & c::CapsLock
 #0::F10
 #-::F11
 #=::F12
-#\::Insert
+#`::Insert
 #Up::PgUp
 #Left::Home
 #Right::End
@@ -84,8 +81,23 @@ CapsLock & c::CapsLock
 #Enter::^+Esc
 #BackSpace::Delete
 #c::CapsLock
+#>!=::#=
+#>!-::#-
+~LWin:: {
+    Send "{Blind}{vkE8}"
+    if !IsLongPress("LWin")
+        SendEvent "{Blind}{Esc}"
+}
 
 ; ===================== 亮度声音控制 ===================================
-` & -:: Send("{Volume_Down}")
-` & =:: Send("{Volume_Up}")
-` & 0:: Send "{Volume_Mute}"
+>!-:: SendEvent("{Volume_Down}")
+>!=:: SendEvent("{Volume_Up}")
+>!0:: SendEvent("{Volume_Mute}")
+
+; ===================== win键控制 ===================================
+IsLongPress(key, longPressTime := 200) {
+    startTime := A_TickCount
+    KeyWait key
+    pressTime := A_TickCount - startTime
+    return pressTime >= longPressTime
+}
