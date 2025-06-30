@@ -1,5 +1,5 @@
 ; ==============================================================
-; 键盘映射工具 v3.9.9
+; 键盘映射工具 v4.0.0
 ; 功能：Win/CapsLock 切换映射模式
 ; ==============================================================
 #Requires AutoHotkey v2.0
@@ -20,8 +20,7 @@ if !FileExist(startupLink)
 ; ===================== 常驻映射 ====================================
 *Browser_Back::F1
 *Browser_Refresh::F2
-*PrintScreen::F4
-*RAlt::LWin
+*PrintScreen::Delete
 SetCapsLockState "AlwaysOff"
 
 ; ===================== CapsLock键映射处理 ===========================

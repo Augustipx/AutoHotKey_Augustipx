@@ -1,5 +1,5 @@
 ; ==============================================================
-; 键盘映射工具 v3.9.9
+; 键盘映射工具 v4.0.0
 ; 功能：Win/CapsLock 切换映射模式
 ; ==============================================================
 #Requires AutoHotkey v2.0
@@ -16,24 +16,11 @@ A_MaxHotkeysPerInterval := 200
 startupLink := A_Startup "\AHK.lnk"
 if !FileExist(startupLink)
     FileCreateShortcut(A_ScriptFullPath, startupLink)
-RegKey := "HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout"
-ValueName := "Scancode Map"
-correctMap :=
-    "00000000" .
-    "00000000" .
-    "02000000" .
-    "3A005BE0" . ;LWin -> CapsLock
-    "00000000"
-if (RegRead(RegKey, ValueName, "REG_BINARY") != correctMap) {
-    RegWrite(correctMap, "REG_BINARY", RegKey, ValueName)
-}
-; RegDelete("HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout", "Scancode Map")
 
 ; ===================== 常驻映射 ====================================
 *Browser_Back::F1
 *Browser_Refresh::F2
-*PrintScreen::F4
-*RAlt::LWin
+*PrintScreen::Delete
 SetCapsLockState "AlwaysOff"
 
 ; ===================== CapsLock键映射处理 ===========================
@@ -69,4 +56,39 @@ CapsLock & L::
     KeyWait("L")
     KeyWait("CapsLock")
     DllCall("LockWorkStation")
+}
+
+; ===================== Win键映射处理 ===========================
+#1::F1
+#2::F2
+#3::F3
+#4::F4
+#5::F5
+#6::F6
+#7::F7
+#8::F8
+#9::F9
+#0::F10
+#-::F11
+#=::F12
+#>!=::#=
+#>!-::#-
+#Up::PgUp
+#`::Insert
+#Left::Home
+#Right::End
+#Down::PgDn
+#Enter::^+Esc
+#c::CapsLock
+#BackSpace::Delete
+~LWin:: SendInput "{Blind}{vkE8}"
+~LWin Up::
+{
+    if (A_PriorKey = "LWin")
+        SendEvent "{Esc}"
+}
+~RAlt Up::
+{
+    if (A_PriorKey = "RAlt")
+        SendEvent "{LWin}"
 }
