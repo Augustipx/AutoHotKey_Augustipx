@@ -87,8 +87,8 @@ CapsLock & L::
     if (A_PriorKey = "LWin")
         SendEvent "{Esc}"
 }
-~RAlt Up::
+~LAlt Up::
 {
-    if (A_PriorKey = "RAlt")
+    if (A_PriorKey = "LAlt")
         SendEvent "{LWin}"
 }
