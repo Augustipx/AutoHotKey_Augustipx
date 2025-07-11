@@ -1,5 +1,5 @@
 ; ==============================================================
-; 键盘映射工具 v4.0.0
+; 键盘映射工具 v4.0.2
 ; 功能：Win/CapsLock 切换映射模式
 ; ==============================================================
 #Requires AutoHotkey v2.0
@@ -87,8 +87,8 @@ CapsLock & L::
     if (A_PriorKey = "LWin")
         SendEvent "{Esc}"
 }
-~LAlt Up::
+~RAlt Up::
 {
-    if (A_PriorKey = "LAlt")
+    if (A_PriorKey = "RAlt")
         SendEvent "{LWin}"
 }
